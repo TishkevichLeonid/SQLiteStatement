@@ -2,6 +2,7 @@ package com.leo.android.sqlitestatement;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -43,14 +44,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertRecords(){
+        String sql = "INSERT INTO " + TABLE_NAME + " VALUES(?, ?, ?);";
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
         mDatabase.beginTransaction();
         try {
             for (int i = 0; i < 1000; i++){
+                statement.clearBindings();
+                statement.bindLong(1, i);
+                statement.bindLong(2, i);
+                statement.bindLong(3, i*i);
+                statement.execute();
+
+                /*
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("Firstnumber", i);
                 contentValues.put("SecondNumber", i);
                 contentValues.put("Result", i*i);
                 mDatabase.insert(TABLE_NAME, null, contentValues);
+                */
             }
             mDatabase.setTransactionSuccessful();
         } finally {
